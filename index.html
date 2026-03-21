@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e3a8a">
+    <title>Car Care - The Atelier</title>
+    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@400;500;700;800&family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: 'Space_Grotesk', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .manrope { font-family: 'Manrope', sans-serif; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .bottom-nav-item.active { background-color: #eff6ff; color: #1e3a8a; border-radius: 0.75rem; }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 pb-24 select-none">
+
+    <div id="loader" class="loading-overlay">
+        <div class="w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="font-bold text-blue-900">Syncing with Server...</p>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200">
+        <div class="flex justify-between items-center px-6 h-16 max-w-screen-xl mx-auto">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-blue-900">directions_car</span>
+                <span class="text-xl font-black text-blue-900 tracking-tighter">The Atelier</span>
+            </div>
+            <button onclick="location.reload()" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                <span class="material-icons-outlined text-slate-600">sync</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="pt-20 px-4 max-w-md mx-auto">
+        <section id="home" class="page active animate-in fade-in duration-500">
+            <div class="mb-8">
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Personal Garage Dashboard</p>
+                <h1 class="text-4xl font-bold text-blue-950 leading-tight">Welcome back,<br><span class="text-blue-600">Commander.</span></h1>
+            </div>
+
+            <div class="grid gap-4 mb-8">
+                <button onclick="showPage('fuel')" class="relative overflow-hidden bg-blue-900 p-6 rounded-3xl text-left group transition-all active:scale-95 shadow-xl shadow-blue-900/10 w-full">
+                    <div class="flex justify-between items-start mb-10">
+                        <span class="material-icons-outlined text-amber-400 text-4xl">local_gas_station</span>
+                        <span class="material-icons-outlined text-white/40">arrow_forward</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-1">บันทึกเติมน้ำมัน</h2>
+                    <p class="text-blue-200 text-sm">Keep track of your fuel efficiency</p>
+                </button>
+
+                <button onclick="showPage('maintenance')" class="bg-white p-6 rounded-3xl text-left group border border-slate-100 transition-all active:scale-95 shadow-sm w-full">
+                    <div class="flex justify-between items-start mb-10">
+                        <div class="p-4 bg-amber-100 rounded-2xl text-amber-600"><span class="material-icons-outlined text-2xl">build</span></div>
+                        <span class="material-icons-outlined text-slate-300">arrow_forward</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-1">บันทึกซ่อมบำรุง</h2>
+                    <p class="text-slate-500 text-sm">Log your service and parts</p>
+                </button>
+            </div>
+        </section>
+
+        <section id="fuel" class="page animate-in slide-in-from-right duration-300">
+            <div class="mb-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">New Entry</p><h1 class="text-4xl font-bold text-blue-950">Fuel Log</h1></div>
+            <form onsubmit="handleFuelSubmit(event)" class="space-y-6">
+                <div class="bg-white p-4 rounded-2xl border border-slate-100">
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">เลือกรถยนต์</label>
+                    <select id="fuelCar" class="car-dropdown w-full bg-slate-50 p-4 rounded-xl border-none font-bold text-slate-700"><option>กำลังโหลด...</option></select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">เลขไมล์ (KM)</label><input type="number" id="fuelOdo" required class="w-full bg-slate-100 p-4 rounded-xl border-none" placeholder="124500"></div>
+                    <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">จำนวน (ลิตร)</label><input type="number" step="0.01" id="fuelLiter" required class="w-full bg-slate-100 p-4 rounded-xl border-none" placeholder="45.50"></div>
+                </div>
+                <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">ยอดเงินรวม (บาท)</label><input type="number" id="fuelCost" required class="w-full bg-slate-100 p-4 rounded-xl border-none font-bold text-lg text-blue-600" placeholder="0.00"></div>
+                <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">ปั๊มน้ำมัน</label><input type="text" id="fuelStation" class="w-full bg-slate-100 p-4 rounded-xl border-none" placeholder="ปตท. สาขา..."></div>
+                <button type="submit" class="w-full bg-blue-950 text-white p-5 rounded-2xl font-bold flex justify-center items-center gap-2 hover:bg-blue-900 shadow-lg shadow-blue-900/20">Save Fuel Log <span class="material-icons-outlined">arrow_forward</span></button>
+            </form>
+        </section>
+
+        <section id="maintenance" class="page animate-in slide-in-from-right duration-300">
+            <div class="mb-6"><p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Maintenance Entry</p><h1 class="text-4xl font-bold text-blue-950 leading-tight">Precision Log</h1></div>
+            <form onsubmit="handleMaintSubmit(event)" class="space-y-6">
+                <div class="bg-white p-4 rounded-2xl border border-slate-100">
+                    <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">เลือกรถยนต์</label>
+                    <select id="maintCar" class="car-dropdown w-full bg-slate-50 p-4 rounded-xl border-none font-bold text-slate-700"><option>กำลังโหลด...</option></select>
+                </div>
+                <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">ประเภทงานซ่อม</label><input type="text" id="maintType" required class="w-full bg-slate-100 p-4 rounded-xl border-none" placeholder="เปลี่ยนยาง, ถ่ายน้ำมันเครื่อง"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">ยอดเงิน (บาท)</label><input type="number" id="maintCost" required class="w-full bg-slate-100 p-4 rounded-xl border-none font-bold text-amber-600" placeholder="0.00"></div>
+                    <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">เลขไมล์ (KM)</label><input type="number" id="maintOdo" class="w-full bg-slate-100 p-4 rounded-xl border-none" placeholder="124500"></div>
+                </div>
+                <div class="space-y-2"><label class="text-[10px] font-bold uppercase text-slate-400 ml-1">ชื่ออู่ / สถานบริการ</label><input type="text" id="maintShop" class="w-full bg-slate-100 p-4 rounded-xl border-none" placeholder="Fit Auto"></div>
+                <button type="submit" class="w-full bg-amber-500 text-white p-5 rounded-2xl font-bold flex justify-center items-center gap-2 hover:bg-amber-600 shadow-lg shadow-amber-500/20"><span class="material-icons-outlined">save</span> Commit to Log</button>
+            </form>
+        </section>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-2xl border-t border-slate-100 px-4 pb-8 pt-3 z-50">
+        <div class="flex justify-around items-center max-w-md mx-auto">
+            <button onclick="showPage('home')" id="nav-home" class="bottom-nav-item active flex flex-col items-center justify-center p-2 text-slate-400 w-16"><span class="material-icons-outlined">home</span><span class="text-[10px] font-bold uppercase mt-1">Home</span></button>
+            <button onclick="showPage('fuel')" id="nav-fuel" class="bottom-nav-item flex flex-col items-center justify-center p-2 text-slate-400 w-16"><span class="material-icons-outlined">local_gas_station</span><span class="text-[10px] font-bold uppercase mt-1">Fuel</span></button>
+            <button onclick="showPage('maintenance')" id="nav-maintenance" class="bottom-nav-item flex flex-col items-center justify-center p-2 text-slate-400 w-16"><span class="material-icons-outlined">build</span><span class="text-[10px] font-bold uppercase mt-1">Maint</span></button>
+        </div>
+    </nav>
+
+    <script>
+        // ⚠️ เอา Web App URL จาก Google มาใส่ตรงนี้ครับ
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrj8UIDNsjinHTjYBBlXLiF5kPswuEWdJtSLrggMgTnkFMSfYmTdjMMKsoxdbTFNUS5g/exec";
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // ดึงรายชื่อรถทันทีที่เปิดแอป
+        window.onload = async () => {
+            try {
+                const response = await fetch(SCRIPT_URL + "?action=getCars");
+                const res = await response.json();
+                if(res.status === 'success') {
+                    const options = res.data.map(car => `<option value="${car}">${car}</option>`).join('');
+                    document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = options);
+                }
+            } catch(e) {
+                const fallbackOptions = `<option value="รถคันที่ 1">รถคันที่ 1</option><option value="รถคันที่ 2">รถคันที่ 2</option>`;
+                document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = fallbackOptions);
+            }
+        };
+
+        async function postToGAS(action, data) {
+            document.getElementById('loader').style.display = 'flex';
+            try {
+                await fetch(SCRIPT_URL + "?action=" + action, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                Swal.fire('Saved!', 'บันทึกข้อมูลเรียบร้อย', 'success').then(() => {
+                    document.querySelectorAll('input').forEach(input => input.value = ''); 
+                    showPage('home');
+                });
+            } catch (error) {
+                Swal.fire('Saved!', 'บันทึกข้อมูลสำเร็จ', 'success').then(() => {
+                    document.querySelectorAll('input').forEach(input => input.value = ''); 
+                    showPage('home');
+                });
+            }
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        function handleFuelSubmit(e) {
+            e.preventDefault();
+            postToGAS("saveFuel", {
+                carName: document.getElementById('fuelCar').value,
+                odo: document.getElementById('fuelOdo').value,
+                liter: document.getElementById('fuelLiter').value,
+                cost: document.getElementById('fuelCost').value,
+                station: document.getElementById('fuelStation').value,
+                note: "Mobile App"
+            });
+        }
+
+        function handleMaintSubmit(e) {
+            e.preventDefault();
+            postToGAS("saveMaint", {
+                carName: document.getElementById('maintCar').value,
+                type: document.getElementById('maintType').value,
+                cost: document.getElementById('maintCost').value,
+                odo: document.getElementById('maintOdo').value,
+                shop: document.getElementById('maintShop').value,
+                date: new Date().toLocaleDateString('th-TH'),
+                note: "Mobile App"
+            });
+        }
+
+        // --- ระบบ PWA สำหรับติดตั้งเป็นแอป ---
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(() => console.log('PWA Ready'));
+        }
+    </script>
+</body>
+</html>
