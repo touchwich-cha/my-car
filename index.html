@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html class="scroll-smooth" lang="th">
 <head>
     <meta charset="utf-8"/>
@@ -82,7 +82,7 @@
                 </div>
             </div>
 
-            <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-slate-50 space-y-4 animate-in fade-in">
+            <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-slate-50 space-y-4">
                 <div>
                     <p class="font-headline text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1" id="dashboardMonthLabel">สรุปค่าใช้จ่ายประจำเดือน</p>
                     <h3 class="font-headline text-4xl font-black text-primary tracking-tight" id="totalMonthExpense">฿0</h3>
@@ -249,8 +249,8 @@
     </nav>
 
     <script>
-        // เปลี่ยน URL นี้ให้ตรงกับ Web App URL ที่ได้จากขั้นตอนการ Deploy ของ Google Apps Script ของคุณครับ
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybO4E-zDoUFrPkfGT4zdV5A9yXeAQRtTEOnoZThR-HDxgJdHyx18kyBTyTFKGQr87cJg/exec";
+        // ใส่ Web App URL ของท่านตรงนี้
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyWJytvAQ-inJYct4IwFatwDoWp21gHrZ367tgsPe0VDhU-U7cvXwrZFd-0vTwnOM3T/exec";
 
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -266,82 +266,80 @@
             window.scrollTo(0, 0);
         }
 
-        // โหดลข้อมูลรถยนต์และสรุปงบสถิติจริงพร้อมกันผ่าน Promise.all
+        // ดึงข้อมูลผ่าน Request ชุดเดียวแบบปลอดภัย
         window.onload = async () => {
             document.getElementById('loader').style.display = 'flex';
             try {
-                const [carsResponse, dashboardResponse] = await Promise.all([
-                    fetch(SCRIPT_URL + "?action=getCars", { redirect: 'follow' }).then(r => r.json()),
-                    fetch(SCRIPT_URL + "?action=getDashboard", { redirect: 'follow' }).then(r => r.json())
-                ]);
+                const response = await fetch(SCRIPT_URL + "?action=getInitialData", { redirect: 'follow' });
+                const res = await response.json();
 
-                // 1. จัดการข้อมูลDropdownรายชื่อรถยนต์และหน้าโรงรถ
-                if (carsResponse.status === 'success' && carsResponse.data.length > 0) {
-                    const cars = carsResponse.data;
-                    const options = cars.map(car => `<option value="${car}">${car}</option>`).join('');
-                    document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = options);
-                    
-                    document.getElementById('activeVehicleLabel').innerText = `Active • ${cars[0]}`;
-                    
-                    const container = document.getElementById('carListContainer');
-                    container.innerHTML = cars.map(car => `
-                        <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm animate-in fade-in">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary">
-                                    <span class="material-symbols-outlined">directions_car</span>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-primary">${car}</p>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Status: Active</p>
+                if (res.status === 'success') {
+                    // 1. นำข้อมูลไปเรนเดอร์ใน Dropdown และหน้า Garage
+                    const cars = res.cars || [];
+                    if (cars.length > 0) {
+                        const options = cars.map(car => `<option value="${car}">${car}</option>`).join('');
+                        document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = options);
+                        document.getElementById('activeVehicleLabel').innerText = `Active • ${cars[0]}`;
+                        
+                        const container = document.getElementById('carListContainer');
+                        container.innerHTML = cars.map(car => `
+                            <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm animate-in fade-in">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined">directions_car</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-primary">${car}</p>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Status: Active</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `).join('');
-                }
-
-                // 2. เรนเดอร์ข้อมูลแดชบอร์ดสถิติจริงลงหน้าแรก
-                if (dashboardResponse.status === 'success') {
-                    const stats = dashboardResponse.data;
-                    
-                    document.getElementById('dashboardMonthLabel').innerText = `สรุปค่าใช้จ่ายประจำเดือน (${stats.monthLabel})`;
-                    document.getElementById('totalMonthExpense').innerText = `฿${stats.totalMonth.toLocaleString('th-TH', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
-                    document.getElementById('fuelMonthExpense').innerText = `฿${stats.totalFuelMonth.toLocaleString('th-TH')}`;
-                    document.getElementById('maintMonthExpense').innerText = `฿${stats.totalMaintMonth.toLocaleString('th-TH')}`;
-                    
-                    // ปรับแต่งความกว้างของ Progress Bar ตามสัดส่วนจริง
-                    const total = stats.totalMonth || 1;
-                    const fuelPercent = (stats.totalFuelMonth / total) * 100;
-                    const maintPercent = (stats.totalMaintMonth / total) * 100;
-                    
-                    document.getElementById('fuelProgressBar').style.width = `${fuelPercent}%`;
-                    document.getElementById('maintProgressBar').style.width = `${maintPercent}%`;
-                    
-                    // เพิ่มรายชื่อรถพร้อมยอดสะสมรายตัวแบบไดนามิก
-                    const breakdownContainer = document.getElementById('carExpenseBreakdownContainer');
-                    if (stats.carBreakdown && Object.keys(stats.carBreakdown).length > 0) {
-                        let html = `<h4 class="font-headline text-xs font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">แยกรายคันในเดือนนี้</h4>`;
-                        let hasData = false;
-                        for (const car in stats.carBreakdown) {
-                            const carData = stats.carBreakdown[car];
-                            if (carData.total > 0) {
-                                hasData = true;
-                                html += `
-                                    <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center animate-in fade-in duration-300">
-                                        <div>
-                                            <p class="text-sm font-bold text-primary">${car}</p>
-                                            <p class="text-[10px] text-slate-400 font-medium">น้ำมัน ฿${carData.fuel.toLocaleString()} • ซ่อมบำรุง ฿${carData.maint.toLocaleString()}</p>
-                                        </div>
-                                        <p class="font-headline font-extrabold text-sm text-primary">฿${carData.total.toLocaleString()}</p>
-                                    </div>
-                                `;
-                            }
-                        }
-                        breakdownContainer.innerHTML = hasData ? html : '';
+                        `).join('');
                     } else {
-                        breakdownContainer.innerHTML = '';
+                        document.getElementById('carListContainer').innerHTML = `<div class="p-4 bg-white rounded-2xl text-center text-slate-400 text-sm">ไม่พบรายชื่อรถในชีต Settings_Cars</div>`;
+                    }
+
+                    // 2. แสดงข้อมูลตัวเลขแดชบอร์ดสถิติจริงประจำเดือน
+                    const stats = res.dashboard;
+                    if (stats) {
+                        document.getElementById('dashboardMonthLabel').innerText = `สรุปค่าใช้จ่ายประจำเดือน (${stats.monthLabel})`;
+                        document.getElementById('totalMonthExpense').innerText = `฿${stats.totalMonth.toLocaleString('th-TH', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
+                        document.getElementById('fuelMonthExpense').innerText = `฿${stats.totalFuelMonth.toLocaleString('th-TH')}`;
+                        document.getElementById('maintMonthExpense').innerText = `฿${stats.totalMaintMonth.toLocaleString('th-TH')}`;
+                        
+                        const total = stats.totalMonth || 1;
+                        const fuelPercent = (stats.totalFuelMonth / total) * 100;
+                        const maintPercent = (stats.totalMaintMonth / total) * 100;
+                        
+                        document.getElementById('fuelProgressBar').style.width = `${fuelPercent}%`;
+                        document.getElementById('maintProgressBar').style.width = `${maintPercent}%`;
+                        
+                        // เรนเดอร์การแยกสถิติเป็นรายคัน
+                        const breakdownContainer = document.getElementById('carExpenseBreakdownContainer');
+                        if (stats.carBreakdown && Object.keys(stats.carBreakdown).length > 0) {
+                            let html = `<h4 class="font-headline text-xs font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">แยกรายคันในเดือนนี้</h4>`;
+                            let hasData = false;
+                            for (const car in stats.carBreakdown) {
+                                const carData = stats.carBreakdown[car];
+                                if (carData.total > 0) {
+                                    hasData = true;
+                                    html += `
+                                        <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center animate-in fade-in duration-300">
+                                            <div>
+                                                <p class="text-sm font-bold text-primary">${car}</p>
+                                                <p class="text-[10px] text-slate-400 font-medium">น้ำมัน ฿${carData.fuel.toLocaleString()} • ซ่อมบำรุง ฿${carData.maint.toLocaleString()}</p>
+                                            </div>
+                                            <p class="font-headline font-extrabold text-sm text-primary">฿${carData.total.toLocaleString()}</p>
+                                        </div>
+                                    `;
+                                }
+                            }
+                            breakdownContainer.innerHTML = hasData ? html : '';
+                        } else {
+                            breakdownContainer.innerHTML = '';
+                        }
                     }
                 }
-
             } catch (e) {
                 console.error("Error connecting server data:", e);
                 document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = `<option value="">การเชื่อมต่อขัดข้อง</option>`);
@@ -350,7 +348,6 @@
             }
         };
 
-        // ยิงบันทึกข้อมูลและรีโหลดหน้าแรกทันทีเพื่อให้ข้อมูลอัปเดตเรียลไทม์
         async function postToGAS(action, data) {
             document.getElementById('loader').style.display = 'flex';
             try {
@@ -359,7 +356,7 @@
                     body: JSON.stringify(data)
                 });
                 Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อย', 'success').then(() => {
-                    location.reload(); // รีเฟรชเพื่อเคลียร์ค่าฟอร์มและป้อนค่าสถิติล่าสุดขึ้น Dashboard ทันที
+                    location.reload();
                 });
             } catch (error) {
                 Swal.fire('สำเร็จ!', 'ระบบประมวลผลข้อมูลเข้าชีตแล้ว', 'success').then(() => {
