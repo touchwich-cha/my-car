@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html class="scroll-smooth" lang="th">
 <head>
     <meta charset="utf-8"/>
@@ -82,22 +82,36 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 gap-4">
-                <div class="bg-surface-container-lowest rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-sm border border-slate-50">
-                    <div class="relative w-36 h-36 mb-4">
-                        <svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
-                            <path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-width="2.5"></path>
-                            <path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="85, 100" stroke-linecap="round" stroke-width="2.5"></path>
-                        </svg>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="font-headline text-3xl font-bold text-primary">85%</span>
-                            <span class="font-headline text-[9px] uppercase tracking-widest text-slate-400 font-bold">Health</span>
+            <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-slate-50 space-y-4 animate-in fade-in">
+                <div>
+                    <p class="font-headline text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1" id="dashboardMonthLabel">สรุปค่าใช้จ่ายประจำเดือน</p>
+                    <h3 class="font-headline text-4xl font-black text-primary tracking-tight" id="totalMonthExpense">฿0</h3>
+                </div>
+                
+                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
+                    <div id="fuelProgressBar" class="h-full bg-blue-600 transition-all duration-500" style="width: 0%"></div>
+                    <div id="maintProgressBar" class="h-full bg-amber-500 transition-all duration-500" style="width: 0%"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <div class="flex items-center gap-1.5 text-slate-400 mb-0.5">
+                            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider">ค่าน้ำมัน</span>
                         </div>
+                        <p class="font-headline font-bold text-base text-slate-800" id="fuelMonthExpense">฿0</p>
                     </div>
-                    <h3 class="font-headline font-bold text-base text-primary">Overall Vehicle Health</h3>
-                    <p class="text-xs text-slate-500 font-medium">Systems Optimal</p>
+                    <div>
+                        <div class="flex items-center gap-1.5 text-slate-400 mb-0.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider">ค่าซ่อมบำรุง</span>
+                        </div>
+                        <p class="font-headline font-bold text-base text-slate-800" id="maintMonthExpense">฿0</p>
+                    </div>
                 </div>
             </div>
+
+            <div class="space-y-3" id="carExpenseBreakdownContainer"></div>
 
             <div class="grid grid-cols-2 gap-4 pb-4">
                 <button class="group bg-white hover:bg-primary transition-all duration-300 rounded-3xl p-6 text-left flex flex-col items-start active:scale-95 shadow-sm border border-slate-100" onclick="showPage('fuel')">
@@ -135,16 +149,16 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                         <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Odometer (KM)</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelOdo" placeholder="124500" required="" type="number"/>
+                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelOdo" placeholder="124500" required type="number"/>
                     </div>
                     <div class="space-y-2">
                         <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Liters (L)</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelLiter" placeholder="45.50" required="" step="0.01" type="number"/>
+                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelLiter" placeholder="45.50" required step="0.01" type="number"/>
                     </div>
                 </div>
                 <div class="space-y-2">
                     <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Total Cost (THB)</label>
-                    <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold text-primary text-lg" id="fuelCost" placeholder="0.00" required="" type="number"/>
+                    <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold text-primary text-lg" id="fuelCost" placeholder="0.00" required type="number"/>
                 </div>
                 <div class="space-y-2">
                     <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Station / Note</label>
@@ -174,7 +188,7 @@
 
                 <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
                     <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-4">Service Type</label>
-                    <input class="w-full bg-slate-50 p-4 rounded-2xl border-none font-bold text-primary focus:ring-2 focus:ring-primary/20" id="maintType" placeholder="e.g. Oil Change, Tires" required="" type="text"/>
+                    <input class="w-full bg-slate-50 p-4 rounded-2xl border-none font-bold text-primary focus:ring-2 focus:ring-primary/20" id="maintType" placeholder="e.g. Oil Change, Tires" required type="text"/>
                 </div>
                 <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
                     <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-4">Service Provider</label>
@@ -183,11 +197,11 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                         <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Odometer</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="maintOdo" placeholder="124500" required="" type="number"/>
+                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="maintOdo" placeholder="124500" required type="number"/>
                     </div>
                     <div class="space-y-2">
                         <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Cost (THB)</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold text-tertiary-fixed-dim" id="maintCost" placeholder="0.00" required type="number"/>
+                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold text-slate-800" id="maintCost" placeholder="0.00" required type="number"/>
                     </div>
                 </div>
                 <button class="w-full bg-tertiary-fixed-dim text-white p-5 rounded-3xl font-headline font-bold flex justify-center items-center gap-2 hover:bg-yellow-500 transition-all shadow-lg shadow-yellow-500/20 active:scale-[0.98]" type="submit">
@@ -235,7 +249,7 @@
     </nav>
 
     <script>
-        // ใช้ Web App URL ล่าสุดของคุณให้แล้วครับ
+        // เปลี่ยน URL นี้ให้ตรงกับ Web App URL ที่ได้จากขั้นตอนการ Deploy ของ Google Apps Script ของคุณครับ
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybO4E-zDoUFrPkfGT4zdV5A9yXeAQRtTEOnoZThR-HDxgJdHyx18kyBTyTFKGQr87cJg/exec";
 
         function showPage(pageId) {
@@ -252,26 +266,26 @@
             window.scrollTo(0, 0);
         }
 
-        // โหลดข้อมูลรถอัตโนมัติ
+        // โหดลข้อมูลรถยนต์และสรุปงบสถิติจริงพร้อมกันผ่าน Promise.all
         window.onload = async () => {
+            document.getElementById('loader').style.display = 'flex';
             try {
-                const response = await fetch(SCRIPT_URL + "?action=getCars", { redirect: 'follow' });
-                const text = await response.text();
-                const res = JSON.parse(text);
-                
-                if(res.status === 'success' && res.data.length > 0) {
-                    const cars = res.data;
-                    // ใส่ใน Dropdown ทั้ง 2 หน้า
+                const [carsResponse, dashboardResponse] = await Promise.all([
+                    fetch(SCRIPT_URL + "?action=getCars", { redirect: 'follow' }).then(r => r.json()),
+                    fetch(SCRIPT_URL + "?action=getDashboard", { redirect: 'follow' }).then(r => r.json())
+                ]);
+
+                // 1. จัดการข้อมูลDropdownรายชื่อรถยนต์และหน้าโรงรถ
+                if (carsResponse.status === 'success' && carsResponse.data.length > 0) {
+                    const cars = carsResponse.data;
                     const options = cars.map(car => `<option value="${car}">${car}</option>`).join('');
                     document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = options);
                     
-                    // อัปเดตหน้า Dashboard
                     document.getElementById('activeVehicleLabel').innerText = `Active • ${cars[0]}`;
                     
-                    // อัปเดตหน้า Garage (Settings)
                     const container = document.getElementById('carListContainer');
                     container.innerHTML = cars.map(car => `
-                        <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm animate-in fade-in">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary">
                                     <span class="material-symbols-outlined">directions_car</span>
@@ -284,13 +298,59 @@
                         </div>
                     `).join('');
                 }
-            } catch(e) {
-                console.log("Error fetching cars:", e);
-                const fallbackOptions = `<option value="รถคันที่ 1">ดึงข้อมูลล้มเหลว</option>`;
-                document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = fallbackOptions);
+
+                // 2. เรนเดอร์ข้อมูลแดชบอร์ดสถิติจริงลงหน้าแรก
+                if (dashboardResponse.status === 'success') {
+                    const stats = dashboardResponse.data;
+                    
+                    document.getElementById('dashboardMonthLabel').innerText = `สรุปค่าใช้จ่ายประจำเดือน (${stats.monthLabel})`;
+                    document.getElementById('totalMonthExpense').innerText = `฿${stats.totalMonth.toLocaleString('th-TH', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
+                    document.getElementById('fuelMonthExpense').innerText = `฿${stats.totalFuelMonth.toLocaleString('th-TH')}`;
+                    document.getElementById('maintMonthExpense').innerText = `฿${stats.totalMaintMonth.toLocaleString('th-TH')}`;
+                    
+                    // ปรับแต่งความกว้างของ Progress Bar ตามสัดส่วนจริง
+                    const total = stats.totalMonth || 1;
+                    const fuelPercent = (stats.totalFuelMonth / total) * 100;
+                    const maintPercent = (stats.totalMaintMonth / total) * 100;
+                    
+                    document.getElementById('fuelProgressBar').style.width = `${fuelPercent}%`;
+                    document.getElementById('maintProgressBar').style.width = `${maintPercent}%`;
+                    
+                    // เพิ่มรายชื่อรถพร้อมยอดสะสมรายตัวแบบไดนามิก
+                    const breakdownContainer = document.getElementById('carExpenseBreakdownContainer');
+                    if (stats.carBreakdown && Object.keys(stats.carBreakdown).length > 0) {
+                        let html = `<h4 class="font-headline text-xs font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">แยกรายคันในเดือนนี้</h4>`;
+                        let hasData = false;
+                        for (const car in stats.carBreakdown) {
+                            const carData = stats.carBreakdown[car];
+                            if (carData.total > 0) {
+                                hasData = true;
+                                html += `
+                                    <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center animate-in fade-in duration-300">
+                                        <div>
+                                            <p class="text-sm font-bold text-primary">${car}</p>
+                                            <p class="text-[10px] text-slate-400 font-medium">น้ำมัน ฿${carData.fuel.toLocaleString()} • ซ่อมบำรุง ฿${carData.maint.toLocaleString()}</p>
+                                        </div>
+                                        <p class="font-headline font-extrabold text-sm text-primary">฿${carData.total.toLocaleString()}</p>
+                                    </div>
+                                `;
+                            }
+                        }
+                        breakdownContainer.innerHTML = hasData ? html : '';
+                    } else {
+                        breakdownContainer.innerHTML = '';
+                    }
+                }
+
+            } catch (e) {
+                console.error("Error connecting server data:", e);
+                document.querySelectorAll('.car-dropdown').forEach(select => select.innerHTML = `<option value="">การเชื่อมต่อขัดข้อง</option>`);
+            } finally {
+                document.getElementById('loader').style.display = 'none';
             }
         };
 
+        // ยิงบันทึกข้อมูลและรีโหลดหน้าแรกทันทีเพื่อให้ข้อมูลอัปเดตเรียลไทม์
         async function postToGAS(action, data) {
             document.getElementById('loader').style.display = 'flex';
             try {
@@ -299,13 +359,11 @@
                     body: JSON.stringify(data)
                 });
                 Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเรียบร้อย', 'success').then(() => {
-                    document.querySelectorAll('input').forEach(input => input.value = ''); 
-                    showPage('home');
+                    location.reload(); // รีเฟรชเพื่อเคลียร์ค่าฟอร์มและป้อนค่าสถิติล่าสุดขึ้น Dashboard ทันที
                 });
             } catch (error) {
-                Swal.fire('สำเร็จ!', 'บันทึกข้อมูลเข้าสู่ระบบแล้ว', 'success').then(() => {
-                    document.querySelectorAll('input').forEach(input => input.value = ''); 
-                    showPage('home');
+                Swal.fire('สำเร็จ!', 'ระบบประมวลผลข้อมูลเข้าชีตแล้ว', 'success').then(() => {
+                    location.reload();
                 });
             }
             document.getElementById('loader').style.display = 'none';
