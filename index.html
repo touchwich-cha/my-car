@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <meta name="theme-color" content="#001944">
-    <title>Precision Car Care - The Atelier</title>
+    <meta name="theme-color" content="#0a0e27">
+    <title>MyTouch CAR</title>
     
     <link rel="manifest" href="manifest.json">
     <link href="https://img.icons8.com/fluency/512/car.png" rel="apple-touch-icon"/>
@@ -12,7 +12,7 @@
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@400;500;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <script id="tailwind-config">
         tailwind.config = {
@@ -20,253 +20,347 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#001944",
-                        "primary-container": "#002c6e",
+                        "primary": "#0a0e27",
+                        "primary-light": "#1a1f4e",
+                        "primary-container": "#2a2f5e",
                         "on-primary": "#ffffff",
-                        "secondary": "#4c616c",
-                        "surface": "#f7f9fc",
+                        "accent": "#ff6b35",
+                        "accent-light": "#ff8a5c",
+                        "accent-dark": "#e55a2b",
+                        "secondary": "#4a5568",
+                        "surface": "#f0f2f8",
                         "surface-container-lowest": "#ffffff",
-                        "surface-container-low": "#f2f4f7",
-                        "surface-container": "#eceef1",
-                        "surface-container-high": "#e0e3e6",
-                        "tertiary-fixed-dim": "#ffba38",
+                        "surface-container-low": "#f8f9fe",
+                        "surface-container": "#eef0f6",
+                        "surface-container-high": "#e4e6ef",
+                        "tertiary-fixed-dim": "#ff6b35",
+                        "card-bg": "rgba(255,255,255,0.85)",
                     },
                     fontFamily: {
-                        "headline": ["Space Grotesk", "sans-serif"],
-                        "body": ["Manrope", "sans-serif"],
+                        "headline": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        "glass": "0 8px 32px rgba(10, 14, 39, 0.08)",
+                        "glass-lg": "0 16px 48px rgba(10, 14, 39, 0.12)",
+                        "accent": "0 8px 24px rgba(255, 107, 53, 0.25)",
+                    },
+                    backdropBlur: {
+                        "xl": "20px",
                     },
                 },
             },
         }
     </script>
     <style>
-        body { font-family: 'Manrope', sans-serif; background-color: #f7f9fc; -webkit-tap-highlight-color: transparent; }
-        .font-headline { font-family: 'Space Grotesk', sans-serif; }
-        .page { display: none; }
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f0f2f8 0%, #e8ebf5 100%); min-height: 100vh; }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .page { display: none; animation: fadeIn 0.35s ease-out; }
         .page.active { display: block; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .nav-active { background-color: #eff6ff; color: #001944; border-radius: 1rem; }
+        .nav-active { background: linear-gradient(135deg, #0a0e27, #1a1f4e); color: white !important; border-radius: 16px; box-shadow: 0 4px 16px rgba(10, 14, 39, 0.2); }
         .nav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
-        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .nav-item { color: #94a3b8; border-radius: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.2); } 50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.4); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        
+        .animate-slide-up { animation: slideUp 0.5s ease-out; }
+        .glass-card { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .glass-card-solid { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+        .accent-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        .shimmer-bg { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); background-size: 200% 100%; animation: shimmer 2.5s infinite; }
+        
+        input, select { transition: all 0.2s ease; }
+        input:focus, select:focus { outline: none; border-color: #ff6b35 !important; box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15) !important; }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c4c8d4; border-radius: 4px; }
     </style>
 </head>
 <body class="pb-32 text-slate-900 select-none">
 
+    <!-- ========== LOADER ========== -->
     <div id="loader" class="loading-overlay">
-        <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="font-bold text-primary">Syncing with Server...</p>
+        <div class="relative">
+            <div class="w-14 h-14 border-[3px] border-primary/10 border-t-accent rounded-full animate-spin"></div>
+            <div class="w-8 h-8 border-[3px] border-primary/5 border-b-primary rounded-full animate-spin absolute inset-0 m-auto"></div>
+        </div>
+        <p class="font-bold text-primary mt-5 text-sm tracking-wide">กำลังโหลดข้อมูล...</p>
     </div>
 
-    <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-16 flex justify-between items-center px-6">
-        <span class="material-symbols-outlined text-primary cursor-pointer">menu_open</span>
-        <h1 class="text-primary font-black tracking-widest text-xl font-headline uppercase">Precision</h1>
-        <button onclick="location.reload()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-primary border border-slate-200 active:scale-95">
+    <!-- ========== HEADER ========== -->
+    <header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-white/20 h-16 flex justify-between items-center px-5" style="background: rgba(255,255,255,0.7);">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary-light flex items-center justify-center shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined text-white text-lg">directions_car</span>
+            </div>
+            <div>
+                <h1 class="font-headline font-extrabold text-sm tracking-tight text-primary">MyTouch CAR</h1>
+                <p class="text-[8px] text-slate-400 font-semibold uppercase tracking-[0.15em]">Vehicle Manager</p>
+            </div>
+        </div>
+        <button onclick="location.reload()" class="w-9 h-9 rounded-xl bg-slate-100/80 hover:bg-slate-200/80 flex items-center justify-center text-primary border border-white/50 backdrop-blur-sm active:scale-90 transition-all">
             <span class="material-symbols-outlined text-sm">sync</span>
         </button>
     </header>
 
-    <main class="mt-20 px-6 max-w-md mx-auto space-y-8">
-        
-        <section class="page active animate-in fade-in duration-500 space-y-6" id="home">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-container p-8 text-on-primary shadow-xl shadow-primary/20">
-                <div class="absolute right-[-10%] bottom-[-10%] opacity-10 w-64 h-64 rotate-12">
-                    <span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'FILL' 1;">directions_car</span>
-                </div>
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="mt-20 px-5 max-w-lg mx-auto space-y-6">
+
+        <!-- ===== PAGE: HOME ===== -->
+        <section class="page active space-y-5" id="home">
+            <!-- Hero Card -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary-light to-primary-container p-7 text-on-primary shadow-xl shadow-primary/30">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4"></div>
                 <div class="relative z-10">
-                    <p class="font-headline text-[10px] tracking-[0.2em] text-blue-200 mb-2 uppercase font-bold">Engine Start</p>
-                    <h2 class="font-headline text-3xl font-bold tracking-tight mb-4 leading-tight">Welcome back,<br/>Commander</h2>
-                    <div class="inline-flex items-center space-x-2 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
-                        <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
-                        <span class="font-headline text-[10px] font-bold uppercase tracking-wider" id="activeVehicleLabel">System Active</span>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-md">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+                            <span class="font-headline text-[9px] font-bold uppercase tracking-wider text-white/80" id="activeVehicleLabel">System Active</span>
+                        </div>
                     </div>
+                    <p class="font-headline text-[10px] tracking-[0.2em] text-accent-light mb-1 uppercase font-bold">Overview</p>
+                    <h2 class="font-headline text-2xl font-extrabold tracking-tight mb-1 leading-tight">Welcome to<br/><span class="text-accent">MyTouch CAR</span></h2>
+                    <p class="text-xs text-white/60 font-medium mt-1">Your personal vehicle expense tracker</p>
                 </div>
             </div>
 
-            <div class="bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-slate-50 space-y-4">
-                <div>
-                    <p class="font-headline text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-1" id="dashboardMonthLabel">สรุปค่าใช้จ่ายประจำเดือน</p>
-                    <h3 class="font-headline text-4xl font-black text-primary tracking-tight" id="totalMonthExpense">฿0</h3>
+            <!-- Monthly Summary -->
+            <div class="glass-card rounded-3xl p-6 shadow-glass border border-white/50">
+                <div class="flex items-center justify-between mb-4">
+                    <p class="font-headline text-[9px] uppercase tracking-widest text-slate-400 font-bold" id="dashboardMonthLabel">สรุปค่าใช้จ่ายประจำเดือน</p>
+                    <span class="material-symbols-outlined text-slate-300 text-lg">calendar_month</span>
                 </div>
+                <h3 class="font-headline text-4xl font-extrabold text-primary tracking-tight mb-4" id="totalMonthExpense">฿0</h3>
                 
-                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden flex">
-                    <div id="fuelProgressBar" class="h-full bg-blue-600 transition-all duration-500" style="width: 0%"></div>
-                    <div id="maintProgressBar" class="h-full bg-amber-500 transition-all duration-500" style="width: 0%"></div>
+                <!-- Progress Bar -->
+                <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden flex gap-0.5 p-0.5">
+                    <div id="fuelProgressBar" class="h-full rounded-full bg-gradient-to-r from-accent to-accent-light transition-all duration-700 ease-out" style="width: 0%"></div>
+                    <div id="maintProgressBar" class="h-full rounded-full bg-gradient-to-r from-primary to-primary-light transition-all duration-700 ease-out" style="width: 0%"></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 pt-2">
-                    <div>
-                        <div class="flex items-center gap-1.5 text-slate-400 mb-0.5">
-                            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider">ค่าน้ำมัน</span>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="bg-accent/5 rounded-2xl p-4 border border-accent/10">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="w-2.5 h-2.5 rounded-full bg-accent"></div>
+                            <span class="text-[9px] font-bold uppercase tracking-wider text-slate-500">ค่าน้ำมัน</span>
                         </div>
-                        <p class="font-headline font-bold text-base text-slate-800" id="fuelMonthExpense">฿0</p>
+                        <p class="font-headline font-extrabold text-lg text-accent-dark" id="fuelMonthExpense">฿0</p>
                     </div>
-                    <div>
-                        <div class="flex items-center gap-1.5 text-slate-400 mb-0.5">
-                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            <span class="text-[10px] font-bold uppercase tracking-wider">ค่าซ่อมบำรุง</span>
+                    <div class="bg-primary/5 rounded-2xl p-4 border border-primary/10">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+                            <span class="text-[9px] font-bold uppercase tracking-wider text-slate-500">ค่าซ่อมบำรุง</span>
                         </div>
-                        <p class="font-headline font-bold text-base text-slate-800" id="maintMonthExpense">฿0</p>
+                        <p class="font-headline font-extrabold text-lg text-primary" id="maintMonthExpense">฿0</p>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-3" id="carExpenseBreakdownContainer"></div>
+            <!-- Car Breakdown -->
+            <div id="carExpenseBreakdownContainer"></div>
 
-            <div class="grid grid-cols-2 gap-4 pb-4">
-                <button class="group bg-white hover:bg-primary transition-all duration-300 rounded-3xl p-6 text-left flex flex-col items-start active:scale-95 shadow-sm border border-slate-100" onclick="showPage('fuel')">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mb-4 shadow-sm group-hover:bg-primary-container transition-colors">
-                        <span class="material-symbols-outlined text-primary group-hover:text-white">local_gas_station</span>
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 gap-3 pb-2">
+                <button class="group glass-card-solid rounded-3xl p-5 text-left flex flex-col items-start active:scale-[0.97] transition-all duration-200 hover:shadow-glass-lg border border-white/60" onclick="showPage('fuel')">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center mb-3 shadow-md shadow-accent/20">
+                        <span class="material-symbols-outlined text-white">local_gas_station</span>
                     </div>
-                    <p class="font-headline font-bold text-sm group-hover:text-white">Record Fuel</p>
-                    <p class="text-[10px] text-slate-400 group-hover:text-blue-100/70 mt-1 font-medium">Log consumption</p>
+                    <p class="font-headline font-bold text-sm text-primary">Add Fuel</p>
+                    <p class="text-[9px] text-slate-400 mt-0.5 font-medium">Log consumption & cost</p>
                 </button>
-                <button class="group bg-white hover:bg-tertiary-fixed-dim transition-all duration-300 rounded-3xl p-6 text-left flex flex-col items-start active:scale-95 shadow-sm border border-slate-100" onclick="showPage('maintenance')">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center mb-4 shadow-sm group-hover:bg-white transition-colors">
-                        <span class="material-symbols-outlined text-amber-600">build</span>
+                <button class="group glass-card-solid rounded-3xl p-5 text-left flex flex-col items-start active:scale-[0.97] transition-all duration-200 hover:shadow-glass-lg border border-white/60" onclick="showPage('maintenance')">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary via-primary-light to-primary-container flex items-center justify-center mb-3 shadow-md shadow-primary/20">
+                        <span class="material-symbols-outlined text-white">build</span>
                     </div>
-                    <p class="font-headline font-bold text-sm group-hover:text-primary">Service</p>
-                    <p class="text-[10px] text-slate-400 group-hover:text-primary/70 mt-1 font-medium">Log maintenance</p>
+                    <p class="font-headline font-bold text-sm text-primary">Service</p>
+                    <p class="text-[9px] text-slate-400 mt-0.5 font-medium">Log maintenance record</p>
                 </button>
             </div>
         </section>
 
-        <section class="page animate-in slide-in-from-right duration-300 space-y-6" id="fuel">
-            <div class="mb-6">
-                <p class="font-headline text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">New Entry</p>
-                <h1 class="font-headline text-4xl font-bold text-primary">Fuel Log</h1>
+        <!-- ===== PAGE: FUEL ===== -->
+        <section class="page space-y-5" id="fuel">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center shadow-md shadow-accent/20">
+                    <span class="material-symbols-outlined text-white">local_gas_station</span>
+                </div>
+                <div>
+                    <p class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">New Entry</p>
+                    <h1 class="font-headline text-2xl font-extrabold text-primary">Fuel Log</h1>
+                </div>
             </div>
-            <form class="space-y-6 pb-10" id="fuelForm" onsubmit="handleFuelSubmit(event)">
-                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                    <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-4">Select Vehicle</label>
+
+            <form class="space-y-4 pb-6" id="fuelForm" onsubmit="handleFuelSubmit(event)">
+                <!-- Vehicle Select -->
+                <div class="glass-card rounded-2xl p-5 border border-white/50">
+                    <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">Select Vehicle</label>
                     <div class="relative">
-                        <select class="car-dropdown w-full bg-slate-50 p-4 pr-10 rounded-2xl border-none font-bold text-primary appearance-none focus:ring-2 focus:ring-primary/20" id="fuelCar">
+                        <select class="car-dropdown w-full bg-slate-50/80 p-4 pr-10 rounded-xl border border-slate-200/50 font-bold text-primary appearance-none focus:ring-2 focus:ring-accent/20" id="fuelCar">
                             <option>กำลังโหลด...</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Odometer (KM)</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelOdo" placeholder="124500" required type="number"/>
+
+                <!-- Odometer & Liters -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="glass-card rounded-2xl p-4 border border-white/50">
+                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Odometer (KM)</label>
+                        <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary text-lg focus:ring-0" id="fuelOdo" placeholder="124500" required type="number"/>
                     </div>
-                    <div class="space-y-2">
-                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Liters (L)</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelLiter" placeholder="45.50" required step="0.01" type="number"/>
+                    <div class="glass-card rounded-2xl p-4 border border-white/50">
+                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Liters (L)</label>
+                        <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary text-lg focus:ring-0" id="fuelLiter" placeholder="45.50" required step="0.01" type="number"/>
                     </div>
                 </div>
-                <div class="space-y-2">
-                    <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Total Cost (THB)</label>
-                    <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold text-primary text-lg" id="fuelCost" placeholder="0.00" required type="number"/>
+
+                <!-- Total Cost -->
+                <div class="glass-card rounded-2xl p-4 border border-white/50">
+                    <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Total Cost (THB)</label>
+                    <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary text-xl focus:ring-0" id="fuelCost" placeholder="0.00" required type="number"/>
                 </div>
-                <div class="space-y-2">
-                    <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Station / Note</label>
-                    <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="fuelStation" placeholder="ปตท. สาขา..." type="text"/>
+
+                <!-- Station / Note -->
+                <div class="glass-card rounded-2xl p-4 border border-white/50">
+                    <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Station / Note</label>
+                    <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary focus:ring-0" id="fuelStation" placeholder="ปตท. สาขา..." type="text"/>
                 </div>
-                <button class="w-full bg-primary text-white p-5 rounded-3xl font-headline font-bold flex justify-center items-center gap-2 hover:bg-primary-container transition-all shadow-lg shadow-primary/20 active:scale-[0.98]" type="submit">
+
+                <!-- Submit -->
+                <button class="w-full bg-gradient-to-r from-accent to-accent-light text-white p-5 rounded-2xl font-headline font-bold flex justify-center items-center gap-2 hover:shadow-accent active:scale-[0.98] transition-all" type="submit">
                     Save Fuel Log <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
             </form>
         </section>
 
-        <section class="page animate-in slide-in-from-right duration-300 space-y-6" id="maintenance">
-            <div class="mb-6">
-                <p class="font-headline text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Precision Maintenance</p>
-                <h1 class="font-headline text-4xl font-bold text-primary">Service Log</h1>
+        <!-- ===== PAGE: MAINTENANCE ===== -->
+        <section class="page space-y-5" id="maintenance">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-primary via-primary-light to-primary-container flex items-center justify-center shadow-md shadow-primary/20">
+                    <span class="material-symbols-outlined text-white">build</span>
+                </div>
+                <div>
+                    <p class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Record</p>
+                    <h1 class="font-headline text-2xl font-extrabold text-primary">Service Log</h1>
+                </div>
             </div>
-            <form class="space-y-6 pb-10" id="maintForm" onsubmit="handleMaintSubmit(event)">
-                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                    <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-4">Select Vehicle</label>
+
+            <form class="space-y-4 pb-6" id="maintForm" onsubmit="handleMaintSubmit(event)">
+                <!-- Vehicle Select -->
+                <div class="glass-card rounded-2xl p-5 border border-white/50">
+                    <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">Select Vehicle</label>
                     <div class="relative">
-                        <select class="car-dropdown w-full bg-slate-50 p-4 pr-10 rounded-2xl border-none font-bold text-primary appearance-none focus:ring-2 focus:ring-primary/20" id="maintCar">
+                        <select class="car-dropdown w-full bg-slate-50/80 p-4 pr-10 rounded-xl border border-slate-200/50 font-bold text-primary appearance-none focus:ring-2 focus:ring-accent/20" id="maintCar">
                             <option>กำลังโหลด...</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                    <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-4">Service Type</label>
-                    <input class="w-full bg-slate-50 p-4 rounded-2xl border-none font-bold text-primary focus:ring-2 focus:ring-primary/20" id="maintType" placeholder="e.g. Oil Change, Tires" required type="text"/>
+                <!-- Service Type -->
+                <div class="glass-card rounded-2xl p-4 border border-white/50">
+                    <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Service Type</label>
+                    <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary text-lg focus:ring-0" id="maintType" placeholder="e.g. Oil Change, Tires" required type="text"/>
                 </div>
-                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
-                    <label class="block font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-4">Service Provider</label>
-                    <input class="w-full bg-slate-50 p-4 rounded-2xl border-none font-bold text-primary focus:ring-2 focus:ring-primary/20" id="maintShop" placeholder="Garage Name" type="text"/>
+
+                <!-- Service Provider -->
+                <div class="glass-card rounded-2xl p-4 border border-white/50">
+                    <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Service Provider</label>
+                    <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary focus:ring-0" id="maintShop" placeholder="Garage Name" type="text"/>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Odometer</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold" id="maintOdo" placeholder="124500" required type="number"/>
+
+                <!-- Odometer & Cost -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="glass-card rounded-2xl p-4 border border-white/50">
+                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Odometer</label>
+                        <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary text-lg focus:ring-0" id="maintOdo" placeholder="124500" required type="number"/>
                     </div>
-                    <div class="space-y-2">
-                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400 ml-1">Cost (THB)</label>
-                        <input class="w-full bg-white p-4 rounded-2xl border border-slate-100 focus:ring-2 focus:ring-primary/20 font-bold text-slate-800" id="maintCost" placeholder="0.00" required type="number"/>
+                    <div class="glass-card rounded-2xl p-4 border border-white/50">
+                        <label class="font-headline text-[9px] font-bold uppercase tracking-widest text-slate-400">Cost (THB)</label>
+                        <input class="w-full bg-transparent mt-1 p-0 border-none font-bold text-primary text-lg focus:ring-0" id="maintCost" placeholder="0.00" required type="number"/>
                     </div>
                 </div>
-                <button class="w-full bg-tertiary-fixed-dim text-white p-5 rounded-3xl font-headline font-bold flex justify-center items-center gap-2 hover:bg-yellow-500 transition-all shadow-lg shadow-yellow-500/20 active:scale-[0.98]" type="submit">
+
+                <!-- Submit -->
+                <button class="w-full bg-gradient-to-r from-primary via-primary-light to-primary-container text-white p-5 rounded-2xl font-headline font-bold flex justify-center items-center gap-2 hover:shadow-glass active:scale-[0.98] transition-all shadow-lg shadow-primary/20" type="submit">
                     Commit to Log <span class="material-symbols-outlined">save</span>
                 </button>
             </form>
         </section>
 
-        <section class="page animate-in slide-in-from-right duration-300 space-y-8" id="settings">
-            <div class="mb-4">
-                <h1 class="font-headline text-4xl font-bold text-primary leading-tight">Garage</h1>
-                <p class="text-slate-500 font-medium">Manage your fleet and preferences.</p>
+        <!-- ===== PAGE: GARAGE (Settings) ===== -->
+        <section class="page space-y-5" id="settings">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center shadow-md shadow-accent/20">
+                    <span class="material-symbols-outlined text-white">garage</span>
+                </div>
+                <div>
+                    <h1 class="font-headline text-2xl font-extrabold text-primary leading-tight">Garage</h1>
+                    <p class="text-xs text-slate-400 font-medium">Manage your fleet and preferences.</p>
+                </div>
             </div>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center mb-2">
+
+            <div class="glass-card rounded-3xl p-5 border border-white/50">
+                <div class="flex justify-between items-center mb-4">
                     <h2 class="font-headline font-bold text-primary tracking-tight">Managed Vehicles</h2>
-                    <button onclick="location.reload()" class="bg-primary text-white px-4 py-2 rounded-2xl text-[10px] font-bold flex items-center gap-1 uppercase tracking-widest">
-                        <span class="material-symbols-outlined text-sm">sync</span> Sync
+                    <button onclick="location.reload()" class="bg-gradient-to-r from-primary to-primary-light text-white px-4 py-2.5 rounded-xl text-[9px] font-bold flex items-center gap-1.5 uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined text-sm">sync</span> Refresh
                     </button>
                 </div>
-                <div class="space-y-3" id="carListContainer">
-                    <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm text-center text-slate-400 text-sm">กำลังโหลดข้อมูลรถ...</div>
+                <div class="space-y-2" id="carListContainer">
+                    <div class="p-5 glass-card rounded-2xl text-center text-slate-400 text-sm border border-white/50">กำลังโหลดข้อมูลรถ...</div>
                 </div>
             </div>
         </section>
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-2 pb-6 pt-3 bg-white/90 backdrop-blur-2xl rounded-t-[2.5rem] z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.04)] border-t border-slate-50">
-        <button class="bottom-nav-item flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 nav-active" id="nav-home" onclick="showPage('home')">
-            <span class="material-symbols-outlined">dashboard</span>
-            <span class="font-headline font-bold text-[9px] tracking-[0.1em] uppercase mt-1">Home</span>
+    <!-- ========== BOTTOM NAVIGATION ========== -->
+    <nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-3 pb-5 pt-3 bg-white/80 backdrop-blur-2xl rounded-t-[2.5rem] z-50 shadow-[0_-4px_30px_rgba(10,14,39,0.06)] border-t border-white/30">
+        <button class="nav-item flex flex-col items-center justify-center px-4 py-2 transition-all duration-200 nav-active" id="nav-home" onclick="showPage('home')">
+            <span class="material-symbols-outlined text-xl mb-0.5">dashboard</span>
+            <span class="font-headline font-bold text-[8px] tracking-[0.12em] uppercase">Home</span>
         </button>
-        <button class="bottom-nav-item flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 text-slate-400" id="nav-fuel" onclick="showPage('fuel')">
-            <span class="material-symbols-outlined">local_gas_station</span>
-            <span class="font-headline font-bold text-[9px] tracking-[0.1em] uppercase mt-1">Fuel</span>
+        <button class="nav-item flex flex-col items-center justify-center px-4 py-2 transition-all duration-200" id="nav-fuel" onclick="showPage('fuel')">
+            <span class="material-symbols-outlined text-xl mb-0.5">local_gas_station</span>
+            <span class="font-headline font-bold text-[8px] tracking-[0.12em] uppercase">Fuel</span>
         </button>
-        <button class="bottom-nav-item flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 text-slate-400" id="nav-maintenance" onclick="showPage('maintenance')">
-            <span class="material-symbols-outlined">build</span>
-            <span class="font-headline font-bold text-[9px] tracking-[0.1em] uppercase mt-1">Maint</span>
+        <button class="nav-item flex flex-col items-center justify-center px-4 py-2 transition-all duration-200" id="nav-maintenance" onclick="showPage('maintenance')">
+            <span class="material-symbols-outlined text-xl mb-0.5">build</span>
+            <span class="font-headline font-bold text-[8px] tracking-[0.12em] uppercase">Service</span>
         </button>
-        <button class="bottom-nav-item flex flex-col items-center justify-center px-5 py-2 transition-all duration-200 text-slate-400" id="nav-settings" onclick="showPage('settings')">
-            <span class="material-symbols-outlined">directions_car</span>
-            <span class="font-headline font-bold text-[9px] tracking-[0.1em] uppercase mt-1">Garage</span>
+        <button class="nav-item flex flex-col items-center justify-center px-4 py-2 transition-all duration-200" id="nav-settings" onclick="showPage('settings')">
+            <span class="material-symbols-outlined text-xl mb-0.5">directions_car</span>
+            <span class="font-headline font-bold text-[8px] tracking-[0.12em] uppercase">Garage</span>
         </button>
     </nav>
 
+    <!-- ========== JAVASCRIPT ========== -->
     <script>
-        // ใส่ Web App URL ของท่านตรงนี้
+        // === Google Apps Script URL (unchanged) ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyWJytvAQ-inJYct4IwFatwDoWp21gHrZ367tgsPe0VDhU-U7cvXwrZFd-0vTwnOM3T/exec";
 
+        // === Page Navigation (unchanged logic) ===
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.bottom-nav-item').forEach(n => {
-                n.classList.remove('nav-active', 'text-primary');
-                n.classList.add('text-slate-400');
+            document.querySelectorAll('.nav-item').forEach(n => {
+                n.classList.remove('nav-active');
             });
             
             document.getElementById(pageId).classList.add('active');
             const navItem = document.getElementById('nav-' + pageId);
-            navItem.classList.add('nav-active', 'text-primary');
-            navItem.classList.remove('text-slate-400');
+            navItem.classList.add('nav-active');
             window.scrollTo(0, 0);
         }
 
-        // ดึงข้อมูลผ่าน Request ชุดเดียวแบบปลอดภัย
+        // === Initial Data Load (unchanged) ===
         window.onload = async () => {
             document.getElementById('loader').style.display = 'flex';
             try {
@@ -274,7 +368,6 @@
                 const res = await response.json();
 
                 if (res.status === 'success') {
-                    // 1. นำข้อมูลไปเรนเดอร์ใน Dropdown และหน้า Garage
                     const cars = res.cars || [];
                     if (cars.length > 0) {
                         const options = cars.map(car => `<option value="${car}">${car}</option>`).join('');
@@ -283,23 +376,22 @@
                         
                         const container = document.getElementById('carListContainer');
                         container.innerHTML = cars.map(car => `
-                            <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 shadow-sm animate-in fade-in">
+                            <div class="flex items-center justify-between p-4 glass-card rounded-2xl border border-white/50 animate-slide-up">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-primary">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-white shadow-md shadow-accent/10">
                                         <span class="material-symbols-outlined">directions_car</span>
                                     </div>
                                     <div>
                                         <p class="text-sm font-bold text-primary">${car}</p>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Status: Active</p>
+                                        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Status: Active</p>
                                     </div>
                                 </div>
                             </div>
                         `).join('');
                     } else {
-                        document.getElementById('carListContainer').innerHTML = `<div class="p-4 bg-white rounded-2xl text-center text-slate-400 text-sm">ไม่พบรายชื่อรถในชีต Settings_Cars</div>`;
+                        document.getElementById('carListContainer').innerHTML = `<div class="p-5 glass-card rounded-2xl text-center text-slate-400 text-sm border border-white/50">ไม่พบรายชื่อรถในชีต Settings_Cars</div>`;
                     }
 
-                    // 2. แสดงข้อมูลตัวเลขแดชบอร์ดสถิติจริงประจำเดือน
                     const stats = res.dashboard;
                     if (stats) {
                         document.getElementById('dashboardMonthLabel').innerText = `สรุปค่าใช้จ่ายประจำเดือน (${stats.monthLabel})`;
@@ -314,20 +406,19 @@
                         document.getElementById('fuelProgressBar').style.width = `${fuelPercent}%`;
                         document.getElementById('maintProgressBar').style.width = `${maintPercent}%`;
                         
-                        // เรนเดอร์การแยกสถิติเป็นรายคัน
                         const breakdownContainer = document.getElementById('carExpenseBreakdownContainer');
                         if (stats.carBreakdown && Object.keys(stats.carBreakdown).length > 0) {
-                            let html = `<h4 class="font-headline text-xs font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">แยกรายคันในเดือนนี้</h4>`;
+                            let html = `<h4 class="font-headline text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">แยกรายคันในเดือนนี้</h4>`;
                             let hasData = false;
                             for (const car in stats.carBreakdown) {
                                 const carData = stats.carBreakdown[car];
                                 if (carData.total > 0) {
                                     hasData = true;
                                     html += `
-                                        <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center animate-in fade-in duration-300">
+                                        <div class="flex items-center justify-between p-4 glass-card rounded-2xl border border-white/50 mb-2 animate-slide-up">
                                             <div>
                                                 <p class="text-sm font-bold text-primary">${car}</p>
-                                                <p class="text-[10px] text-slate-400 font-medium">น้ำมัน ฿${carData.fuel.toLocaleString()} • ซ่อมบำรุง ฿${carData.maint.toLocaleString()}</p>
+                                                <p class="text-[9px] text-slate-400 font-medium">น้ำมัน ฿${carData.fuel.toLocaleString()} • ซ่อมบำรุง ฿${carData.maint.toLocaleString()}</p>
                                             </div>
                                             <p class="font-headline font-extrabold text-sm text-primary">฿${carData.total.toLocaleString()}</p>
                                         </div>
@@ -348,6 +439,7 @@
             }
         };
 
+        // === POST to GAS (unchanged) ===
         async function postToGAS(action, data) {
             document.getElementById('loader').style.display = 'flex';
             try {
@@ -366,6 +458,7 @@
             document.getElementById('loader').style.display = 'none';
         }
 
+        // === Fuel Form Submit (unchanged) ===
         function handleFuelSubmit(e) {
             e.preventDefault();
             postToGAS("saveFuel", {
@@ -378,6 +471,7 @@
             });
         }
 
+        // === Maintenance Form Submit (unchanged) ===
         function handleMaintSubmit(e) {
             e.preventDefault();
             postToGAS("saveMaint", {
@@ -391,6 +485,7 @@
             });
         }
 
+        // === Service Worker Registration (unchanged) ===
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js').then(() => console.log('PWA Ready'));
         }

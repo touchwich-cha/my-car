@@ -1,11 +1,11 @@
 {
-  "name": "Precision Car Care",
-  "short_name": "Car Care",
+  "name": "MyTouch CAR",
+  "short_name": "MyTouch CAR",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#f7f9fc",
-  "theme_color": "#001944",
-  "description": "ระบบบันทึกค่ายานพาหนะและน้ำมัน",
+  "background_color": "#f0f2f8",
+  "theme_color": "#0a0e27",
+  "description": "ระบบบันทึกค่ายานพาหนะและน้ำมัน - MyTouch CAR",
   "icons": [
     {
       "src": "https://img.icons8.com/fluency/512/car.png",
